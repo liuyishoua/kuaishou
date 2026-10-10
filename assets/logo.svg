@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">KuaiShou-Spider logo</title>
+  <desc id="desc">An abstract fast bird with a small spider-web orbit.</desc>
+  <defs>
+    <linearGradient id="wing" x1="90" y1="80" x2="420" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB23E"/>
+      <stop offset="0.48" stop-color="#FF6B4A"/>
+      <stop offset="1" stop-color="#E83D62"/>
+    </linearGradient>
+    <linearGradient id="body" x1="130" y1="125" x2="360" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFCF52"/>
+      <stop offset="1" stop-color="#F04D55"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="257" cy="260" rx="177" ry="123" stroke="#29232B" stroke-width="12" opacity="0.28" transform="rotate(-17 257 260)"/>
+    <path d="M102 298c53-31 105-45 157-42 58 3 104 25 150 70" stroke="#29232B" stroke-width="9" opacity="0.24"/>
+    <path d="M141 185c65-78 172-102 250-48-35 9-62 29-83 61 42 2 82 17 118 47-73 37-139 40-198 9-28-15-56-37-87-69Z" fill="url(#wing)" stroke="#29232B" stroke-width="12"/>
+    <path d="M142 185c-17 31-24 64-18 101 9 57 46 94 102 105 39 8 78-2 112-28-52-9-93-31-124-67-28-33-49-70-72-111Z" fill="url(#body)" stroke="#29232B" stroke-width="12"/>
+    <path d="M196 321c41 9 80 5 117-12" stroke="#FFF7E8" stroke-width="14" opacity="0.88"/>
+    <path d="M379 137c22 1 43 8 61 22" stroke="#29232B" stroke-width="12"/>
+    <circle cx="369" cy="125" r="10" fill="#29232B" stroke="none"/>
+    <path d="M431 351c-26 26-58 43-93 49" stroke="#29232B" stroke-width="10" opacity="0.82"/>
+    <path d="M421 338l27 2-16 22" fill="#29232B" stroke="none"/>
+    <path d="M83 337c20-8 40-11 61-8" stroke="#29232B" stroke-width="10" opacity="0.82"/>
+    <path d="M91 321l-22 16 25 12" fill="#29232B" stroke="none"/>
+  </g>
+</svg>
