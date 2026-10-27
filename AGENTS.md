@@ -7,3 +7,5 @@
 - 检查：`.venv/bin/python -m unittest discover -s web/tests -v`；前端修改运行 `node --check web/static/app.js`，并使用现有 Playwright 对临时演示实例检查交互。
 - 部署沿用 `kuaishou-web.service` 与 `kuaishou-proxy.service`。门户只修改 Bifrost 链接目录，不修改其他应用。
 - 实际页面、账号认证、平台数据请求、真实发布的验证状态分别说明；不要将演示数据或排队结果称为平台成功。
+
+- Agent 目录：`/api/channel/catalog` 通过服务端实时访问 Multica；单选绑定经 `/v1/bindings` 固定当前来源/账号/用途，不以已有路由限制目录。`channel-task` 保留首次执行身份，改名/换绑不重写历史。目录故障明确失败，无旧列表回退。新增回归位于 `web/tests/test_channel_agents.py`。

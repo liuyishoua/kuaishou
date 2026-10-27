@@ -28,6 +28,8 @@ def create_app(directory=None, platform=None, auth=True, public_origin=None):
     for name, value in [('session-key',secrets.token_hex(32)),('admin-password',secrets.token_urlsafe(18))]:
         if not (directory/name).exists(): private_file(directory/name, value)
     app = Flask(__name__, static_folder='static')
+    from .page_assets import install_pages
+    install_pages(app, {'index.html','login.html','operations.html'})
     app.config.update(SECRET_KEY=(directory/'session-key').read_text(), MAX_CONTENT_LENGTH=100*1024,
         SESSION_COOKIE_NAME=CONFIG['slug']+'_console', SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE='Strict', SESSION_COOKIE_SECURE=bool(public_origin and public_origin.startswith('https:')),
@@ -35,6 +37,8 @@ def create_app(directory=None, platform=None, auth=True, public_origin=None):
     password_hash = generate_password_hash((directory/'admin-password').read_text().strip())
     service = Service(directory, platform or Platform(directory))
     app.extensions['workspace'] = service
+    from .operations import register_operations
+    register_operations(app, service, CONFIG)
     from .channel_bridge import register_channel
     def channel_record(item_id, owner):
         try: return service.record('result', item_id, uid=owner)
@@ -130,7 +134,7 @@ def create_app(directory=None, platform=None, auth=True, public_origin=None):
         def work(uid):
             result=service.platform.tool(name,data)
             for item in result.get('items',[]): service.put('result',item,uid)
-            return result
+            return {**result,'tool':name}
         return jsonify(service.submit(CONFIG['name']+' · '+name,data.get('request_id'),work)),202
 
     @app.get('/api/library/<item_id>/history')
@@ -163,7 +167,9 @@ def create_app(directory=None, platform=None, auth=True, public_origin=None):
     @app.post('/api/comments')
     def comments():
         d=request.json; item_id=str(d.get('id',''))
-        with service.lock: item=service.record('result',item_id)
+        with service.lock:
+            try: item=service.record('result',item_id)
+            except LookupError: item=service.record('item',item_id)
         return jsonify(service.submit('读取评论',d.get('request_id'),lambda uid:service.platform.comments(item))),202
 
     @app.post('/api/users')

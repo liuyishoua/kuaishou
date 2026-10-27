@@ -23,6 +23,14 @@ def main():
     if args.demo:
         from .demo import seed
         seed(app.extensions['workspace'])
+    from .workspace_identity import install_identity
+    def tenant_app(path):
+        child=create_app(path, auth=False, public_origin=args.public_origin)
+        child.extensions['operations'].start_worker()
+        return child
+    if not args.demo:
+        install_identity(app, directory, CONFIG['slug'], tenant_app)
+    app.extensions['operations'].start_worker()
     from waitress import serve
     print(f"{CONFIG['name']} http://{args.host}:{args.port}（{'演示' if args.demo else '真实'}模式）",flush=True)
     if not args.no_auth:print(f'访问密码保存在 {directory}/admin-password',flush=True)

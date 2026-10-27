@@ -122,9 +122,16 @@ class Platform:
             'text':text(x.get('content')),'likes':x.get('likedCount',0)} for x in rows],'notice':'展示当前页评论'}
 
     def user(self,uid,page):
-        if page!=1:raise PlatformError('用户作品当前支持首屏查询')
-        raw=checked(KuaishouAPI.get_profile_feed(self.client(),uid))
-        return {'items':[projection(x) for x in raw.get('feeds') or []],'has_more':False,'page':1}
+        key='user:'+uid
+        if page==1:self.cursors[key]={1:''}
+        cursor=(self.cursors.get(key) or {}).get(page)
+        if cursor is None:raise PlatformError('用户作品需要顺序翻页，请先读取第一页')
+        raw=checked(KuaishouAPI.get_profile_feed(self.client(),uid,pcursor=cursor))
+        items=[projection(x) for x in raw.get('feeds') or []]
+        next_cursor=str(raw.get('pcursor') or '')
+        more=bool(items and next_cursor not in ('','no_more','-1') and next_cursor!=cursor)
+        if more:self.cursors[key][page+1]=next_cursor
+        return {'items':items,'has_more':more,'page':page}
 
     def publish(self,content):raise PlatformError('快手需要图片或视频素材，请使用官方创作者入口发布；本地草稿不会发布')
 
@@ -134,7 +141,7 @@ class Platform:
             if not re.fullmatch(r'[A-Za-z0-9_-]{5,40}',eid):raise PlatformError('请输入直播间 EID')
             raw=KuaishouLiveAPI.get_room_state(self.client(),eid)
             author=raw.get('author') or {}
-            return {'items':[{'id':'live-'+eid,'title':text(raw.get('caption') or '快手直播间'),'text':'正在直播' if raw.get('isLiving') else '未开播',
+            return {'items':[{'id':'live-'+eid,'kind':'live','title':text(raw.get('caption') or '快手直播间'),'text':'正在直播' if raw.get('isLiving') else '未开播',
                 'author':text(author.get('name') if isinstance(author,dict) else author),'url':'https://live.kuaishou.com/u/'+eid,
                 'uid':eid,'views':'—','likes':'—','comments':0,'cover':'','tags':'','note':''}], 'notice':'直播间状态由当前平台发现列表确认'}
         if name in ('liked','collected','history'):
