@@ -1,6 +1,6 @@
 # 快手工作台
 
-浏览器入口： https://d.58nft.net:9454/ 。从 https://d.58nft.net/ 门户点击 `kuaishou` 也可进入。
+浏览器入口： https://portal.example.com:20040/ 。从 https://portal.example.com/ 门户点击 `kuaishou` 也可进入。
 
 五个新增工作台使用用户指定的统一访问密码，保存在各自 `.local/web/admin-password` 中（不写入源码或文档）。工作台登录与平台登录独立；进入后打开「账号连接」完成平台认证。新工作台没有预置平台账号。
 
@@ -38,12 +38,12 @@
 - `web/demo.py`：离线夹具，禁止真实登录和发布。
 - `.local/web/`：访问密码、平台凭据、会话与数据库，目录私有且 Git 忽略。
 
-本机接口 `http://127.0.0.1:8776`，正式服务 `kuaishou-web.service` 与 `kuaishou-proxy.service`。
+本机接口 `http://127.0.0.1:20008`，正式服务 `kuaishou-web.service` 与 `kuaishou-proxy.service`。
 
 ```sh
 python3 -m venv .venv
 .venv/bin/pip install -r requirements-web.txt
-.venv/bin/python -m web --port 8776 --public-origin https://d.58nft.net:9454
+.venv/bin/python -m web --port 20008 --public-origin https://portal.example.com:20040
 ```
 
 离线验收：
@@ -51,7 +51,7 @@ python3 -m venv .venv
 ```sh
 .venv/bin/python -m unittest discover -s web/tests -v
 node --check web/static/app.js
-.venv/bin/python -m web --demo --no-auth --port 8876 --data-dir /tmp/kuaishou-preview
+.venv/bin/python -m web --demo --no-auth --port 20025 --data-dir /tmp/kuaishou-preview
 ```
 
 `--no-auth` 仅允许回环地址且不接受公网 Origin。正式服务不用演示数据。

@@ -94,3 +94,6 @@ __pycache__/
 docs/*verification*.json
 docs/acceptance.json
 docs/previews/*production*
+
+# Private operator configuration and local validation records
+/docs/images/overview.png
